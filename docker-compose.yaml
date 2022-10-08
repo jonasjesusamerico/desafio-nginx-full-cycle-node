@@ -13,11 +13,13 @@ services:
       - nginx-net
 
   app:
-    depends_on: 
-      - db
     restart: always
     container_name: node-app
-    build: ./app/
+    entrypoint: dockerize -wait tcp://db:3306 -timeout 20s npm start
+    build: 
+      context: app
+    depends_on: 
+      - db
     networks:
       - nginx-net
   ngnix:
